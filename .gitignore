@@ -3,7 +3,7 @@
 *.aar
 *.ap_
 *.aab
-
+*.DS_STORE
 # Files for the ART/Dalvik VM
 *.dex
 
@@ -11,6 +11,7 @@
 *.class
 
 # Generated files
+.idea/
 bin/
 gen/
 out/

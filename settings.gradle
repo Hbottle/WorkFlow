@@ -1,0 +1,3 @@
+rootProject.name='WorkFlow'
+include ':app'
+include ':workflow'
