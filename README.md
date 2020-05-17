@@ -1,10 +1,11 @@
+# WorkFlow
 ## 概述
 有时候完成一个任务可能需要执行A、B、C、D、E、F...若干子个任务。可能是这样子的，A完成后执行B，B完成后执行C...直到所有任务完成：
-![workflow1](https://img-blog.csdnimg.cn/20200517104832411.jpeg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhbGZfYm90dGxl,size_16,color_FFFFFF,t_70#pic_center)
+![workflow1](./img/workflow1.jpeg)
 也可能是这样子的：先执行A，A完成后可以并发执行BCDE，BCED都完成后执行F，F完成则流程完成：
-![workflow2](https://img-blog.csdnimg.cn/20200517104855194.jpeg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhbGZfYm90dGxl,size_16,color_FFFFFF,t_70#pic_center)
+![workflow2](./img/workflow2.jpeg)
 还可能是这样子的：先执行A，A执行完以后同时执行BC，B完成后执行E，D则要等BC完成之后才能执行，D完成后执行F，EF执行完成则流程完成：
-![workflow3](https://img-blog.csdnimg.cn/20200517105047504.jpeg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhbGZfYm90dGxl,size_16,color_FFFFFF,t_70#pic_center)
+![workflow3](./img/workflow3.jpeg)
 如果按照任务顺序直接写则需要很多的Callback层层嵌套来确保任务顺序，把自己都绕晕，过一段时间以后再看，可能就不知道自己身在何处，所为何事。如果有一个工具，可以按照需求构建任务流程，并且在统一等地方回调各个任务的进度及结果，则可以将子任务解耦，降低代码的复杂度和耦合度。WorkFlow就是为了这个目的而来。
 ## WorkFlow
 WorkFlow简化了复杂任务的构建流程，统一监听子任务的回调。可以设置某个子任务是必须/非必须的，这样在任务失败时就会终止工作流，或者忽视失败，继续流程。可以让子任务报告进度，也可以在某些时候主动终止流程。只需要按照下面步骤，即可完成实现工作流：
@@ -14,7 +15,7 @@ WorkFlow简化了复杂任务的构建流程，统一监听子任务的回调。
 
 ### 图式流程：
 各个子任务的前后依赖关系直接明确，但看起来可能会比较复杂，如图：
-![workflow3](https://img-blog.csdnimg.cn/20200517105047504.jpeg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhbGZfYm90dGxl,size_16,color_FFFFFF,t_70#pic_center)
+![workflow3](./img/workflow3.jpeg)
 如下所示代码构建该流程：
 ```kotlin
     val procedure = Procedure()
@@ -44,7 +45,7 @@ WorkFlow简化了复杂任务的构建流程，统一监听子任务的回调。
 
 ### 队列式流程：
 只知道任务但先后关系，但是具体的依赖关系不明确，如图：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200517225203626.jpeg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2hhbGZfYm90dGxl,size_16,color_FFFFFF,t_70#pic_center)
+![在这里插入图片描述](./img/workflow4.jpeg)
 如下所示代码构建该流程：
 ```kotlin
     val taskA = Task("taskA") { it.complete() }
