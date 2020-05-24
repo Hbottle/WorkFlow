@@ -18,13 +18,7 @@ private fun procedure() {
         sleep(100)
         it.progress(10, "")
         sleep(100)
-        it.progress(20, "")
-        sleep(100)
-        it.progress(30, "")
-        sleep(100)
         it.progress(50, "")
-        sleep(100)
-        it.progress(70, "")
         sleep(100)
         it.progress(90, "")
         sleep(100)
@@ -34,11 +28,7 @@ private fun procedure() {
         sleep(100)
         it.progress(10, "")
         sleep(100)
-        it.progress(30, "")
-        sleep(100)
         it.progress(50, "")
-        sleep(100)
-        it.progress(70, "")
         sleep(100)
         it.progress(90, "")
         sleep(100)
@@ -52,8 +42,6 @@ private fun procedure() {
             it.progress(50, "")
             sleep(100)
             it.complete()
-            //it.failed()
-            //it.progress(50, "")
         }
     }
     val taskD = Task("taskD") {
@@ -63,10 +51,6 @@ private fun procedure() {
         it.progress(50, "")
         sleep(100)
         it.complete()
-        //it.cancel()
-        //procedure.cancel(-1, "i cancel it")
-        //it.progress(50, "")
-        //it.failed()
     }
     val taskE = Task("taskE") {
         if (!it.canceled) {
@@ -98,9 +82,11 @@ private fun procedure() {
     }.start(object : OnProcedureListener {
 
         override fun onCompleted() {
+            println("Procedure is Completed")
         }
 
         override fun onFailed(task: Task) {
+            println("Procedure is Failed")
         }
 
     })
@@ -131,8 +117,6 @@ private fun workflow() {
             it.progress(50, "")
             sleep(100)
             it.complete()
-            //it.failed()
-            //it.progress(50, "")
         }
     }
     val taskD = Task("taskD") {
@@ -142,9 +126,6 @@ private fun workflow() {
         it.progress(50, "")
         sleep(100)
         it.complete()
-        // it.cancel()
-        //it.progress(50, "")
-        //it.failed()
     }
     val taskE = Task("taskE") {
         if (!it.canceled) {
@@ -163,9 +144,11 @@ private fun workflow() {
     workFlow.start(object : OnProcedureListener {
 
         override fun onCompleted() {
+            println("WorkFlow is Completed")
         }
 
         override fun onFailed(task: Task) {
+            println("WorkFlow is Completed")
         }
 
     })

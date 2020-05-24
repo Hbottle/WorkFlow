@@ -46,14 +46,14 @@ class WorkFlow : OnProcedureListener {
     }
 
     @Synchronized
-    fun start(onProcedureListener: OnProcedureListener) {
+    fun start(onProcedureListener: OnProcedureListener, inputParam: MutableMap<String, Any>? = null) {
         if (mWorkNodes.isEmpty()) {
             return
         }
         mOnProcedureListener = onProcedureListener
         mCurrentProcedure = mWorkNodes.poll()
         state = TaskState.RUNNING
-        mCurrentProcedure?.start(this)
+        mCurrentProcedure?.start(this, inputParam)
     }
 
     @Synchronized

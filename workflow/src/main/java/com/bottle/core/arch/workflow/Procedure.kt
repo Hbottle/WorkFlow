@@ -21,7 +21,7 @@ class Procedure : OnTaskListener {
     @Volatile
     private var failed = false // 这是一个标志位，表示流程是否因为某个必须的任务失败而失败了
     @Volatile
-    var abortOnFailed = false // 这是一个标志位，表示流程是否因为某个必须的任务失败而失败了
+    var abortOnFailed = false // 和Task的一样，表示WorkFlow是否会因为Procedure失败而终止
     @Volatile
     private var canceled = false // 流程被取消
     private val mExecutor: ExecutorService
@@ -74,13 +74,15 @@ class Procedure : OnTaskListener {
         return this
     }
 
-    fun start(listener: OnProcedureListener) {
+    fun start(listener: OnProcedureListener, inputParam: MutableMap<String, Any>? = null) {
         mOnProcedureListener = listener
         var temp: Task
         for ((key, value) in mTaskMap) {
             temp = value
             // 没有前置任务的都执行，它们就是第一批要执行的任务
             if (temp.prevTasks.isEmpty()) {
+                // 如果有输入参数则
+                inputParam?.let { temp.inputParam.putAll(inputParam) }
                 mExecutor.execute(temp)
             }
         }
@@ -120,7 +122,7 @@ class Procedure : OnTaskListener {
         }
     }
 
-    override fun onTaskComplete(task: Task) {
+    override fun onTaskComplete(task: Task, output: Any?) {
         mLogger.invoke("onTaskComplete(): ${task.name}")
         if (failed || canceled) {
             mLogger.invoke("onTaskComplete() failed, already canceled or failed")
@@ -146,6 +148,7 @@ class Procedure : OnTaskListener {
             for (next in task.nextTasks) {
                 // 多线程环境下可能会重入某个任务，这里设置一个关卡
                 if (next.taskState < TaskState.RUNNING) {
+                    output?.let { next.inputParam[task.name] = output }
                     mExecutor.execute(next)
                 }
             }
@@ -176,7 +179,7 @@ class Procedure : OnTaskListener {
         if (task.nextTasks.isEmpty()) {
             var allDone = true
             for ((key, value) in mTaskMap) {
-                if (value.taskState < TaskState.SUCCESS) {
+                if (value.taskState < TaskState.FAILED) {
                     allDone = false
                     break
                 }

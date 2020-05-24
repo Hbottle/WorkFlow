@@ -17,6 +17,7 @@ class Task(
     internal val nextTasks: MutableList<Task> = ArrayList() // 后置任务(执行完之后要执行的任务，具体要不要执行，看还依赖哪些任务)
     internal lateinit var onTaskListener: OnTaskListener
     internal var mLogger: ((log: String) -> Unit) = { println(it) }
+    internal val inputParam: MutableMap<String, Any> = mutableMapOf()
 
     @Volatile
     var taskState: Int
@@ -76,7 +77,7 @@ class Task(
     /**
      * 任务完成时必须调用，否则后面的任务无法执行
      */
-    fun complete() {
+    fun complete(output: Any? = null) {
         if (isCanceledOrCompleted("complete()1")) {
             return
         }
@@ -85,7 +86,7 @@ class Task(
                 return
             }
             taskState = TaskState.SUCCESS
-            onTaskListener.onTaskComplete(this)
+            onTaskListener.onTaskComplete(this, output)
         }
     }
 
@@ -154,7 +155,7 @@ interface OnTaskListener {
      *
      * @param task 当前完成的任务
      */
-    fun onTaskComplete(task: Task)
+    fun onTaskComplete(task: Task, output: Any?)
 
     /**
      * 某个任务失败
